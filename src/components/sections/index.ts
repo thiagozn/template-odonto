@@ -1,0 +1,10 @@
+export { Navbar } from "./Navbar";
+export { Hero } from "./Hero";
+export { Servicos } from "./Servicos";
+export { PorQueNosEscolher } from "./PorQueNosEscolher";
+export { Sobre } from "./Sobre";
+export { Agendamento } from "./Agendamento";
+export { Depoimentos } from "./Depoimentos";
+export { FAQ } from "./FAQ";
+export { Footer } from "./Footer";
+export { StickyBottomBar } from "./StickyBottomBar";
