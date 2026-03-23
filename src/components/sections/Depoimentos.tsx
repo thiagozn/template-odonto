@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 
 const testimonials = [
   {
@@ -61,12 +62,59 @@ function GoogleLogo({ className }: { className?: string }) {
 }
 
 export function Depoimentos() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEndHandle = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextSlide();
+    }
+    if (isRightSwipe) {
+      prevSlide();
+    }
+  };
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+  };
+
   return (
     <section
       id="depoimentos"
-      className="bg-[#f9f6f1] py-[60px] px-5 md:py-20 md:px-6 lg:px-8"
+      className="bg-[#f9f6f1] py-[60px] px-5 md:py-20 md:px-6 lg:px-8 overflow-hidden"
     >
-      <div className="mx-auto max-w-7xl">
+      <style>{`
+        .mobile-carousel-depoimentos {
+          transform: translateX(calc(-${currentIndex * 100}% - ${currentIndex * 1}rem));
+        }
+        @media (min-width: 768px) {
+          .mobile-carousel-depoimentos {
+            transform: none !important;
+          }
+        }
+      `}</style>
+      <div className="mx-auto max-w-7xl relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -81,19 +129,42 @@ export function Depoimentos() {
           </p>
         </motion.div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 gap-5 min-[769px]:grid-cols-3 lg:gap-8"
+        <div 
+          className="relative group"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEndHandle}
         >
-          {testimonials.map((t, i) => (
+          <button
+            onClick={prevSlide}
+            className="absolute left-0 top-1/2 -mt-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 shadow-md text-[#1a1a1a] md:hidden -ml-2"
+            aria-label="Anterior"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          
+          <button
+            onClick={nextSlide}
+            className="absolute right-0 top-1/2 -mt-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 shadow-md text-[#1a1a1a] md:hidden -mr-2"
+            aria-label="Próximo"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          <div className="overflow-hidden md:overflow-visible">
             <motion.div
-              key={i}
-              variants={item}
-              className="rounded-2xl border border-[#c9a256]/10 bg-white p-4 shadow-lg md:p-6"
+              variants={container}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="mobile-carousel-depoimentos flex md:grid gap-4 md:gap-5 min-[769px]:grid-cols-3 lg:gap-8 transition-transform duration-300 ease-in-out"
             >
+              {testimonials.map((t, i) => (
+                <motion.div
+                  key={i}
+                  variants={item}
+                  className="w-full shrink-0 md:w-auto md:shrink rounded-2xl border border-[#c9a256]/10 bg-white p-4 shadow-lg md:p-6"
+                >
               <div className="mb-3 flex items-start justify-between">
                 <div
                   className="flex h-10 w-10 items-center justify-center rounded-full text-base font-bold text-white"
@@ -119,9 +190,24 @@ export function Depoimentos() {
               </p>
               <p className="text-sm font-medium text-[#1a1a1a]">{t.name}</p>
               <p className="text-xs text-[#1a1a1a]/60">Google Reviews</p>
+                </motion.div>
+              ))}
             </motion.div>
-          ))}
-        </motion.div>
+          </div>
+
+          <div className="mt-6 flex justify-center gap-2 md:hidden">
+            {testimonials.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentIndex(i)}
+                className={`h-2 rounded-full transition-all ${
+                  currentIndex === i ? "w-6 bg-[#c9a256]" : "w-2 bg-[#c9a256]/30"
+                }`}
+                aria-label={`Ir para o depoimento ${i + 1}`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
