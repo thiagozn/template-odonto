@@ -82,13 +82,11 @@ export const CardTransformed = React.forwardRef<
         ref={ref}
         style={{
           zIndex: arrayLength - index,
-          left: "50%",
-          translateX: "-50%", // fallback for CSS if Framer hasn't applied transform yet
           ...style,
         }}
-        initial={{ x: "-50%", y: yOffset, scale: scaleVal, opacity: opacityVal, rotate: rotateVal }}
+        initial={{ x: 0, y: yOffset, scale: scaleVal, opacity: opacityVal, rotate: rotateVal }}
         animate={{
-          x: "-50%", // Mantém a centralização mesclada ao drag
+          x: 0,
           y: yOffset,
           scale: scaleVal,
           opacity: opacityVal,
@@ -100,7 +98,7 @@ export const CardTransformed = React.forwardRef<
         dragConstraints={{ left: -1000, right: 0 }}
         dragElastic={0.8}
         onDragEnd={handleDragEnd}
-        className={cn(cardVariants({ variant, className }), isActive ? "cursor-grab active:cursor-grabbing" : "")}
+        className={cn("left-0 right-0 mx-auto", cardVariants({ variant, className }), isActive ? "cursor-grab active:cursor-grabbing" : "")}
         {...props}
       />
     )

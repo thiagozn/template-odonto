@@ -49,7 +49,11 @@ export function Depoimentos() {
   const handleDragEnd = (info: any) => {
     // Threshold para direita (passando pro próximo se arrastou muito pra esquerda)
     if (info.offset.x < -100) {
-      setCards((prev) => [...prev.slice(1), prev[0]]);
+      setCards((prev) => {
+        const remaining = prev.slice(1);
+        const top = prev[0];
+        return [...remaining, top];
+      });
     }
   };
 
@@ -79,23 +83,28 @@ export function Depoimentos() {
             {cards.map((t, index) => {
               return (
                 <motion.div
+                  layout // Essencial: faz o Framer resetar o drag offset automaticamente quando a ordem é alterada!
                   key={t.id}
-                  className="absolute top-0 left-0 right-0 mx-auto flex w-full h-[400px] flex-col justify-between rounded-[2rem] border border-[#c9a256]/20 bg-white p-8 shadow-[0_15px_40px_rgba(0,0,0,0.1)] cursor-grab active:cursor-grabbing"
+                  className="absolute top-0 left-0 flex w-full h-[400px] flex-col justify-between rounded-[2rem] border border-[#c9a256]/20 bg-white p-8 shadow-[0_15px_40px_rgba(0,0,0,0.1)] cursor-grab active:cursor-grabbing"
                   style={{
                     zIndex: cards.length - index,
                     transformOrigin: "bottom center",
                   }}
+                  initial={{
+                    opacity: 0,
+                    scale: 0.8,
+                    y: 50,
+                  }}
                   animate={{
-                    x: 0,
-                    // PROFUNDIDADE DINÂMICA: calcula scale e offset baseado unicamente no índice atual
+                    x: 0, // Garante que após o drag, volte perfeitamente pra centralização x=0
                     y: index * 16,
                     scale: 1 - index * 0.05,
                     opacity: 1 - index * 0.15,
                     rotate: index === 0 ? 0 : index % 2 === 0 ? 2 : -2,
                   }}
-                  // ANIMAÇÃO DE SAÍDA (Sumir e voltar)
+                  // ANIMAÇÃO DE SAÍDA
                   exit={{
-                    x: -1000,
+                    x: "-100vw",
                     opacity: 0,
                     transition: { duration: 0.2 },
                   }}
@@ -104,10 +113,11 @@ export function Depoimentos() {
                     stiffness: 300,
                     damping: 25,
                   }}
-                  // DRAG EM TODOS OS CARDS E TRAVA UNIDIRECIONAL (Apenas Esquerda)
+                  // DRAG CONFIGS PARA SNAP BACK
                   drag="x"
-                  dragConstraints={{ left: -1000, right: 0 }}
-                  dragElastic={{ left: 1, right: 0 }}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={{ left: 0.7, right: 0.1 }}
+                  whileDrag={index === 0 ? { scale: 0.98 } : undefined}
                   onDragEnd={(_, info) => handleDragEnd(info)}
                 >
                   <div className="flex flex-col items-center space-y-4 text-center pointer-events-none mb-2">
