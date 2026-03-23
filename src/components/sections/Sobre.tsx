@@ -19,9 +19,10 @@ export function Sobre() {
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 items-center gap-8 min-[769px]:gap-12 lg:grid-cols-2">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
             className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl lg:aspect-[4/5]"
           >
             <Image
@@ -33,42 +34,58 @@ export function Sobre() {
             />
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="space-y-4 md:space-y-6"
-          >
-            <h2 className="text-2xl font-bold text-[#1a1a1a] font-[family-name:var(--font-playfair)] md:text-3xl lg:text-4xl">
-              Sobre a dentista
-            </h2>
-            <p className="text-sm leading-relaxed text-[#1a1a1a]/80 md:text-base">
-              A Dra. Maria Silva dedica sua carreira a transformar sorrisos e
-              melhorar a qualidade de vida dos pacientes. Com mais de 15 anos de
-              experiência, combina técnica apurada com um atendimento acolhedor,
-              sempre priorizando o conforto e a segurança de cada pessoa que
-              passa pela clínica.
-            </p>
-            <p className="text-sm leading-relaxed text-[#1a1a1a]/80 md:text-base">
-              Acredita que a odontologia vai além dos dentes — é sobre
-              autoestima, saúde geral e bem-estar. Por isso, investe
-              constantemente em capacitação e tecnologia para oferecer os
-              melhores tratamentos disponíveis.
-            </p>
+          <div className="space-y-4 md:space-y-6">
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
+              className="space-y-4 md:space-y-6"
+            >
+              <h2 className="text-2xl font-bold text-[#1a1a1a] font-[family-name:var(--font-playfair)] md:text-3xl lg:text-4xl">
+                Sobre a dentista
+              </h2>
+              <p className="text-sm leading-relaxed text-[#1a1a1a]/80 md:text-base">
+                A Dra. Maria Silva dedica sua carreira a transformar sorrisos e
+                melhorar a qualidade de vida dos pacientes. Com mais de 15 anos de
+                experiência, combina técnica apurada com um atendimento acolhedor,
+                sempre priorizando o conforto e a segurança de cada pessoa que
+                passa pela clínica.
+              </p>
+              <p className="text-sm leading-relaxed text-[#1a1a1a]/80 md:text-base">
+                Acredita que a odontologia vai além dos dentes — é sobre
+                autoestima, saúde geral e bem-estar. Por isso, investe
+                constantemente em capacitação e tecnologia para oferecer os
+                melhores tratamentos disponíveis.
+              </p>
+            </motion.div>
             <div>
-              <h3 className="mb-3 text-base font-semibold text-[#1a1a1a] font-[family-name:var(--font-playfair)] md:mb-4 md:text-lg">
+              <motion.h3
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="mb-3 text-base font-semibold text-[#1a1a1a] font-[family-name:var(--font-playfair)] md:mb-4 md:text-lg"
+              >
                 Credenciais
-              </h3>
+              </motion.h3>
               <ul className="space-y-2 text-sm text-[#1a1a1a]/80 md:text-base">
                 {credentials.map((cred, i) => (
-                  <li key={i} className="flex items-start gap-2">
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.5 + i * 0.15 }}
+                    className="flex items-start gap-2"
+                  >
                     <span className="mt-1 text-[#c9a256]">•</span>
                     {cred}
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

@@ -35,13 +35,25 @@ export function Agendamento() {
           className="mx-auto max-w-2xl"
         >
           <div className="mb-8 text-center md:mb-12">
-            <h2 className="text-2xl font-bold text-[#1a1a1a] font-[family-name:var(--font-playfair)] md:text-3xl lg:text-4xl">
+            <motion.h2
+              initial={{ opacity: 0, y: -15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="text-2xl font-bold text-[#1a1a1a] font-[family-name:var(--font-playfair)] md:text-3xl lg:text-4xl"
+            >
               Agende sua consulta
-            </h2>
-            <p className="mt-3 text-sm text-[#1a1a1a]/70 md:mt-4 md:text-base">
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: -10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
+              className="mt-3 text-sm text-[#1a1a1a]/70 md:mt-4 md:text-base"
+            >
               Preencha o formulário e será redirecionado ao WhatsApp para
               confirmar seu horário.
-            </p>
+            </motion.p>
           </div>
 
           <motion.form
@@ -52,7 +64,12 @@ export function Agendamento() {
             transition={{ delay: 0.2 }}
             className="space-y-4 rounded-2xl bg-[#f9f6f1] p-5 md:p-8"
           >
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -15 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+            >
               <label
                 htmlFor="nome"
                 className="mb-2 block text-sm font-medium text-[#1a1a1a]"
@@ -68,8 +85,13 @@ export function Agendamento() {
                 required
                 className="h-11 bg-white"
               />
-            </div>
-            <div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -15 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.35 }}
+            >
               <label
                 htmlFor="telefone"
                 className="mb-2 block text-sm font-medium text-[#1a1a1a]"
@@ -85,8 +107,13 @@ export function Agendamento() {
                 required
                 className="h-11 bg-white"
               />
-            </div>
-            <div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -15 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.5 }}
+            >
               <label
                 htmlFor="mensagem"
                 className="mb-2 block text-sm font-medium text-[#1a1a1a]"
@@ -101,15 +128,22 @@ export function Agendamento() {
                 rows={3}
                 className="w-full min-w-0 rounded-lg border border-input bg-white px-2.5 py-2 text-sm transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 resize-none"
               />
-            </div>
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white"
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.65 }}
             >
-              <Calendar size={20} className="mr-2" />
-              Enviar pelo WhatsApp
-            </Button>
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <Calendar size={20} className="mr-2" />
+                Enviar pelo WhatsApp
+              </Button>
+            </motion.div>
           </motion.form>
         </motion.div>
       </div>

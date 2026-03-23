@@ -1,212 +1,155 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const testimonials = [
   {
+    id: "dep-1",
     name: "Ana Carolina M.",
+    tipo: "Paciente - Clareamento",
     rating: 5,
-    text: "Atendimento excepcional! A Dra. Maria é extremamente atenciosa e profissional. Meu clareamento superou as expectativas. Recomendo demais!",
+    description:
+      "Atendimento excepcional! A Dra. é extremamente atenciosa e profissional. Meu clareamento superou as expectativas. Recomendo demais!",
     color: "#4285F4",
   },
   {
+    id: "dep-2",
     name: "Roberto Santos",
+    tipo: "Paciente - Implante",
     rating: 5,
-    text: "Fiz implante há 2 anos e o resultado é incrível. A clínica é moderna, limpa e a equipe é muito acolhedora. Voltarei sempre que precisar.",
+    description:
+      "Fiz implante há 2 anos e o resultado é incrível. A clínica é moderna, limpa e a equipe é muito acolhedora. Voltarei sempre que precisar.",
     color: "#34A853",
   },
   {
+    id: "dep-3",
     name: "Juliana Oliveira",
+    tipo: "Paciente - Ortodontia",
     rating: 5,
-    text: "Melhor dentista que já consultei. Explica tudo com clareza, não senti nenhum incômodo durante o tratamento. Ambiente super tranquilo.",
+    description:
+      "Melhor dentista que já consultei. Explica tudo com clareza, não senti nenhum incômodo durante o tratamento. Ambiente super tranquilo.",
     color: "#EA4335",
+  },
+  {
+    id: "dep-4",
+    name: "Marcos Pereira",
+    tipo: "Paciente - Consulta",
+    rating: 5,
+    description:
+      "Fui indicado por um amigo e não me arrependo. Atendimento humanizado, clínica moderna e resultado excelente. Com certeza voltarei!",
+    color: "#c9a256",
   },
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
-};
-
-function GoogleLogo({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 48 48"
-      fill="none"
-      aria-hidden
-    >
-      <text
-        x="50%"
-        y="58%"
-        textAnchor="middle"
-        fontSize="26"
-        fontWeight="800"
-        fontFamily="Arial, Helvetica, sans-serif"
-        fill="#4285F4"
-      >
-        G
-      </text>
-    </svg>
-  );
-}
-
 export function Depoimentos() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [cards, setCards] = useState(testimonials);
 
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEndHandle = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    if (isLeftSwipe) {
-      nextSlide();
+  const handleDragEnd = (info: any) => {
+    // Threshold para direita (passando pro próximo se arrastou muito pra esquerda)
+    if (info.offset.x < -100) {
+      setCards((prev) => [...prev.slice(1), prev[0]]);
     }
-    if (isRightSwipe) {
-      prevSlide();
-    }
-  };
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
   };
 
   return (
     <section
       id="depoimentos"
-      className="bg-[#f9f6f1] py-[60px] px-5 md:py-20 md:px-6 lg:px-8 overflow-hidden"
+      className="bg-[#f9f6f1] py-[60px] px-5 md:px-6 md:py-20 lg:px-8 overflow-hidden relative"
     >
-      <style>{`
-        .mobile-carousel-depoimentos {
-          transform: translateX(calc(-${currentIndex * 100}% - ${currentIndex * 1}rem));
-        }
-        @media (min-width: 768px) {
-          .mobile-carousel-depoimentos {
-            transform: none !important;
-          }
-        }
-      `}</style>
-      <div className="mx-auto max-w-7xl relative">
+      <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-10 text-center md:mb-16"
+          className="mb-14 text-center md:mb-16"
         >
           <h2 className="text-2xl font-bold text-[#1a1a1a] font-[family-name:var(--font-playfair)] md:text-3xl lg:text-4xl">
             O que dizem nossos pacientes
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-[#1a1a1a]/70 md:mt-4 md:text-base">
-            Depoimentos reais de quem confia no nosso trabalho.
+            Arraste os depoimentos para a esquerda para ler os próximos relatos.
           </p>
         </motion.div>
 
-        <div 
-          className="relative group"
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEndHandle}
-        >
-          <button
-            onClick={prevSlide}
-            className="absolute left-0 top-1/2 -mt-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 shadow-md text-[#1a1a1a] md:hidden -ml-2"
-            aria-label="Anterior"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          
-          <button
-            onClick={nextSlide}
-            className="absolute right-0 top-1/2 -mt-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 shadow-md text-[#1a1a1a] md:hidden -mr-2"
-            aria-label="Próximo"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
-
-          <div className="overflow-hidden md:overflow-visible">
-            <motion.div
-              variants={container}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="mobile-carousel-depoimentos flex md:grid gap-4 md:gap-5 min-[769px]:grid-cols-3 lg:gap-8 transition-transform duration-300 ease-in-out"
-            >
-              {testimonials.map((t, i) => (
+        {/* REMOVIDOS ESPAÇOS VAZIOS. TAMANHO FIXO EXATO PARA O STACK. */}
+        <div className="relative mx-auto w-full max-w-[340px] md:max-w-[400px] h-[450px]">
+          <AnimatePresence>
+            {cards.map((t, index) => {
+              return (
                 <motion.div
-                  key={i}
-                  variants={item}
-                  className="w-full shrink-0 md:w-auto md:shrink rounded-2xl border border-[#c9a256]/10 bg-white p-4 shadow-lg md:p-6"
+                  key={t.id}
+                  className="absolute top-0 left-0 right-0 mx-auto flex w-full h-[400px] flex-col justify-between rounded-[2rem] border border-[#c9a256]/20 bg-white p-8 shadow-[0_15px_40px_rgba(0,0,0,0.1)] cursor-grab active:cursor-grabbing"
+                  style={{
+                    zIndex: cards.length - index,
+                    transformOrigin: "bottom center",
+                  }}
+                  animate={{
+                    x: 0,
+                    // PROFUNDIDADE DINÂMICA: calcula scale e offset baseado unicamente no índice atual
+                    y: index * 16,
+                    scale: 1 - index * 0.05,
+                    opacity: 1 - index * 0.15,
+                    rotate: index === 0 ? 0 : index % 2 === 0 ? 2 : -2,
+                  }}
+                  // ANIMAÇÃO DE SAÍDA (Sumir e voltar)
+                  exit={{
+                    x: -1000,
+                    opacity: 0,
+                    transition: { duration: 0.2 },
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 25,
+                  }}
+                  // DRAG EM TODOS OS CARDS E TRAVA UNIDIRECIONAL (Apenas Esquerda)
+                  drag="x"
+                  dragConstraints={{ left: -1000, right: 0 }}
+                  dragElastic={{ left: 1, right: 0 }}
+                  onDragEnd={(_, info) => handleDragEnd(info)}
                 >
-              <div className="mb-3 flex items-start justify-between">
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-full text-base font-bold text-white"
-                  style={{ backgroundColor: t.color }}
-                  aria-hidden
-                >
-                  {t.name.trim().charAt(0).toUpperCase()}
-                </div>
-                <GoogleLogo className="h-4 w-4 md:h-5 md:w-5" />
-              </div>
+                  <div className="flex flex-col items-center space-y-4 text-center pointer-events-none mb-2">
+                    <div className="flex gap-1 text-[#c9a256] drop-shadow-sm">
+                      {[...Array(t.rating)].map((_, i) => (
+                        <svg
+                          key={i}
+                          className="size-5 md:size-6"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.37-2.448a1 1 0 00-1.175 0l-3.37 2.448c-.784.57-1.838-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.05 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.286-3.957z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <blockquote className="text-base leading-relaxed text-[#1a1a1a]/80 italic">
+                      "{t.description}"
+                    </blockquote>
+                  </div>
 
-              <div className="mb-3 flex gap-0.5 md:mb-4">
-                {Array.from({ length: t.rating }).map((_, j) => (
-                  <Star
-                    key={j}
-                    className="size-4 fill-[#c9a256] text-[#c9a256] md:size-[18px]"
-                  />
-                ))}
-              </div>
-              <Quote className="mb-2 size-6 text-[#c9a256]/40 md:size-7" />
-              <p className="mb-3 text-xs leading-relaxed text-[#1a1a1a]/80 md:mb-4 md:text-sm">
-                &ldquo;{t.text}&rdquo;
-              </p>
-              <p className="text-sm font-medium text-[#1a1a1a]">{t.name}</p>
-              <p className="text-xs text-[#1a1a1a]/60">Google Reviews</p>
+                  <div className="flex flex-col items-center gap-3 mt-auto pointer-events-none pb-2">
+                    <Avatar className="!size-14 border-2 border-[#c9a256]/30 shadow-sm">
+                      <AvatarFallback
+                        style={{ backgroundColor: t.color }}
+                        className="text-white font-bold text-lg"
+                      >
+                        {t.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="text-center">
+                      <span className="block font-semibold tracking-wide text-[#1a1a1a]">
+                        {t.name}
+                      </span>
+                      <span className="block text-xs text-[#1a1a1a]/50 uppercase font-medium tracking-wide mt-1">
+                        {t.tipo}
+                      </span>
+                    </div>
+                  </div>
                 </motion.div>
-              ))}
-            </motion.div>
-          </div>
-
-          <div className="mt-6 flex justify-center gap-2 md:hidden">
-            {testimonials.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentIndex(i)}
-                className={`h-2 rounded-full transition-all ${
-                  currentIndex === i ? "w-6 bg-[#c9a256]" : "w-2 bg-[#c9a256]/30"
-                }`}
-                aria-label={`Ir para o depoimento ${i + 1}`}
-              />
-            ))}
-          </div>
+              );
+            })}
+          </AnimatePresence>
         </div>
       </div>
     </section>
