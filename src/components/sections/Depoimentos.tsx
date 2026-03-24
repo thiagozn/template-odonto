@@ -44,7 +44,6 @@ const testimonials = [
 
 export function Depoimentos() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const touchStartX = useRef<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const nextSlide = () =>
@@ -53,7 +52,6 @@ export function Depoimentos() {
   const prevSlide = () =>
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
 
-  // Auto-play a cada 5s
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(nextSlide, 5000);
@@ -61,23 +59,11 @@ export function Depoimentos() {
 
   useEffect(() => {
     resetTimer();
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, []);
 
-  // Touch events nativos
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.targetTouches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff > 50) { nextSlide(); resetTimer(); }
-    else if (diff < -50) { prevSlide(); resetTimer(); }
-    touchStartX.current = null;
-  };
+  const handlePrev = () => { prevSlide(); resetTimer(); };
+  const handleNext = () => { nextSlide(); resetTimer(); };
 
   return (
     <section
@@ -95,74 +81,84 @@ export function Depoimentos() {
           </p>
         </div>
 
-        {/* Carrossel */}
-        <div
-          className="relative mx-auto overflow-hidden w-full max-w-[360px] md:max-w-[420px]"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {/* Track deslizante */}
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        {/* Carrossel com botões laterais */}
+        <div className="relative flex items-center justify-center gap-3 md:gap-5">
+
+          {/* Botão anterior */}
+          <button
+            onClick={handlePrev}
+            className="flex-shrink-0 flex items-center justify-center size-11 rounded-full border-2 border-[#c9a256]/40 text-[#c9a256] hover:bg-[#c9a256] hover:text-white hover:border-[#c9a256] transition-all duration-300 focus:outline-none shadow-sm"
+            aria-label="Depoimento anterior"
           >
-            {testimonials.map((t) => (
-              <div
-                key={t.id}
-                className="flex-shrink-0 w-full flex flex-col justify-between rounded-[2rem] border border-[#c9a256]/20 bg-white p-8 shadow-sm select-none"
-                style={{ minHeight: 360 }}
-              >
-                {/* Conteúdo do card */}
-                <div className="flex flex-col items-center space-y-4 text-center">
-                  {/* Estrelas */}
-                  <div className="flex gap-1 text-[#c9a256]">
-                    {[...Array(t.rating)].map((_, i) => (
-                      <svg key={i} className="size-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.37-2.448a1 1 0 00-1.175 0l-3.37 2.448c-.784.57-1.838-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.05 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.286-3.957z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <blockquote className="text-base leading-relaxed text-[#1a1a1a]/80 italic">
-                    "{t.description}"
-                  </blockquote>
-                </div>
+            <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
 
-                {/* Avatar */}
-                <div className="flex flex-col items-center gap-3 mt-6">
-                  <Avatar className="!size-14 border-2 border-[#c9a256]/30 shadow-sm">
-                    <AvatarFallback
-                      style={{ backgroundColor: t.color }}
-                      className="text-white font-bold text-lg"
-                    >
-                      {t.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="text-center">
-                    <span className="block font-semibold tracking-wide text-[#1a1a1a]">
-                      {t.name}
-                    </span>
-                    <span className="block text-xs text-[#1a1a1a]/50 uppercase font-medium tracking-wide mt-1">
-                      {t.tipo}
-                    </span>
+          {/* Área do card */}
+          <div className="overflow-hidden w-full max-w-[340px] md:max-w-[420px]">
+            <div
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            >
+              {testimonials.map((t) => (
+                <div
+                  key={t.id}
+                  className="flex-shrink-0 w-full flex flex-col justify-between rounded-[2rem] border border-[#c9a256]/20 bg-white p-8 shadow-sm"
+                  style={{ minHeight: 360 }}
+                >
+                  <div className="flex flex-col items-center space-y-4 text-center">
+                    <div className="flex gap-1 text-[#c9a256]">
+                      {[...Array(t.rating)].map((_, i) => (
+                        <svg key={i} className="size-5" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.37-2.448a1 1 0 00-1.175 0l-3.37 2.448c-.784.57-1.838-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.05 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.286-3.957z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <blockquote className="text-base leading-relaxed text-[#1a1a1a]/80 italic">
+                      "{t.description}"
+                    </blockquote>
+                  </div>
+                  <div className="flex flex-col items-center gap-3 mt-6">
+                    <Avatar className="!size-14 border-2 border-[#c9a256]/30 shadow-sm">
+                      <AvatarFallback style={{ backgroundColor: t.color }} className="text-white font-bold text-lg">
+                        {t.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="text-center">
+                      <span className="block font-semibold tracking-wide text-[#1a1a1a]">{t.name}</span>
+                      <span className="block text-xs text-[#1a1a1a]/50 uppercase font-medium tracking-wide mt-1">{t.tipo}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-6">
-            {testimonials.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => { setCurrentIndex(i); resetTimer(); }}
-                className={`h-2.5 rounded-full transition-all duration-300 focus:outline-none ${
-                  i === currentIndex ? "w-8 bg-[#c9a256]" : "w-2.5 bg-[#c9a256]/30"
-                }`}
-                aria-label={`Ir para depoimento ${i + 1}`}
-              />
-            ))}
-          </div>
+          {/* Botão próximo */}
+          <button
+            onClick={handleNext}
+            className="flex-shrink-0 flex items-center justify-center size-11 rounded-full border-2 border-[#c9a256]/40 text-[#c9a256] hover:bg-[#c9a256] hover:text-white hover:border-[#c9a256] transition-all duration-300 focus:outline-none shadow-sm"
+            aria-label="Próximo depoimento"
+          >
+            <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mt-6">
+          {testimonials.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => { setCurrentIndex(i); resetTimer(); }}
+              className={`h-2.5 rounded-full transition-all duration-300 focus:outline-none ${
+                i === currentIndex ? "w-8 bg-[#c9a256]" : "w-2.5 bg-[#c9a256]/30"
+              }`}
+              aria-label={`Ir para depoimento ${i + 1}`}
+            />
+          ))}
         </div>
       </div>
     </section>

@@ -25,12 +25,12 @@ const items: CardItem[] = [
   {
     title: "Equipamentos de Ponta",
     description: "Utilizamos tecnologia de última geração para diagnósticos precisos e tratamentos mais rápidos e confortáveis.",
-    imageUrl: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=600&q=80",
+    imageUrl: "https://img.freepik.com/free-photo/close-up-dentist-instruments_23-2151042903.jpg?w=740",
   },
   {
     title: "Equipe Especializada",
     description: "Profissionais qualificados e em constante atualização para oferecer o melhor tratamento para você.",
-    imageUrl: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=600&q=80",
+    imageUrl: "https://img.freepik.com/free-photo/team-female-dentists-treating-patients-teeth-visit-dentist-dentistry_169016-67227.jpg?w=1060",
   },
 ];
 
