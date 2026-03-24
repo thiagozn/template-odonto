@@ -9,7 +9,7 @@ const services = [
   {
     title: "Clareamento Dental",
     description: "Tratamento estético que devolve a beleza e o brilho natural dos seus dentes com técnicas seguras e resultados duradouros.",
-    image: "https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?w=600&q=80",
+    image: "https://img.freepik.com/free-photo/closeup-young-woman-having-her-teeth-whitened-with-ultraviolet-light-dental-clinic_662251-2598.jpg",
   },
   {
     title: "Implantes",
@@ -19,12 +19,12 @@ const services = [
   {
     title: "Ortodontia",
     description: "Aparelhos fixos e alinhadores invisíveis para corrigir o alinhamento dos dentes e proporcionar um sorriso harmonioso.",
-    image: "https://images.unsplash.com/photo-1588776814546-1ffbb1960c55?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?q=80&w=1170&auto=format&fit=crop",
   },
   {
     title: "Prevenção",
     description: "Consultas regulares, limpeza profissional e orientações para manter sua saúde bucal em dia durante toda a vida.",
-    image: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1662837625427-970713d74aa6?q=80&w=687&auto=format&fit=crop",
   },
 ];
 
